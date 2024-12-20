@@ -1,0 +1,13 @@
+{
+    "scripts": {
+        "start": "@php bin/task-tracker"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.2"
+    }
+}

@@ -1,0 +1,29 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+
+use App\Exception\BaseException;
+use App\Main;
+
+include 'vendor/autoload.php';
+
+bootstrap();
+
+function bootstrap()
+{
+  global $argv;
+
+  try {
+    $arguments = array_slice($argv, 1);
+    @[$commandName] = array_splice($arguments, 0, 1);
+
+    if (empty($commandName)) {
+      return;
+    }
+
+    Main::instance()->commander->execute($commandName, $arguments);
+  } catch (BaseException $e) {
+    echo $e->getCustomMessage();
+  } catch (\Exception $e) {
+    echo $e->getMessage();
+  }
+}
