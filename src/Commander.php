@@ -3,7 +3,7 @@
 namespace App;
 
 use App\Commands\BaseCommand;
-use App\Exceptions\NotFoundException;
+use App\Exceptions\NotCommandFoundException;
 
 class Commander
 {
@@ -42,6 +42,6 @@ class Commander
             return;
         }
 
-        throw new NotFoundException("Unknown $commandName command");
+        throw new NotCommandFoundException("Unknown $commandName command");
     }
 }
