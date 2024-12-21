@@ -8,10 +8,10 @@ class TaskModel
 {
     public function __construct(
         public readonly int $ID,
-        public readonly string $description,
-        public readonly int $createdAt,
-        public readonly int $updatedAt = $this->$createdAt,
-        public readonly TaskStatus $status = TaskStatus::TODO,
+        public string $description,
+        public int $createdAt,
+        public int $updatedAt,
+        public TaskStatus $status = TaskStatus::TODO,
     ) {
     }
 }

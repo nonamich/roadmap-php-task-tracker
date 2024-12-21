@@ -2,10 +2,10 @@
 
 namespace App\Enums;
 
-enum LoggerColor
+enum LoggerColor: int
 {
-    case ERROR = "31";
-    case SUCCESS = "32";
-    case WARNING = "33";
-    case INFO = "36";
+    case ERROR = 31;
+    case SUCCESS = 32;
+    case WARNING = 33;
+    case INFO = 36;
 }

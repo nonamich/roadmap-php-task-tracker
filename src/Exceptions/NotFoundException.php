@@ -4,6 +4,6 @@ namespace App\Exceptions;
 
 use App\Enums\LoggerColor;
 
-class ValidateException extends BaseException
+class NotFoundException extends BaseException
 {
 }

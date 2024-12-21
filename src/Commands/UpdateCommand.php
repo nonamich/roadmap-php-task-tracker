@@ -3,36 +3,51 @@
 namespace App\Commands;
 
 use App\Commands\BaseCommand;
+use App\Exceptions\NotFoundException;
 use App\Exceptions\ValidateException;
 
-class AddCommand extends BaseCommand
+class UpdateCommand extends BaseCommand
 {
+    protected int $id;
     protected string $description;
 
     static public function getCommandName(): string
     {
-        return 'add';
+        return 'update';
     }
 
     protected function parseArgumentsOrThrow()
     {
-        @[$description] = $this->arguments;
+        @[$id, $description] = $this->arguments;
+
+        if (empty($id) || !is_numeric($id)) {
+            throw new ValidateException('id must be not empty');
+        }
 
         if (empty($description)) {
             throw new ValidateException('Description must be not empty');
         }
 
+        $this->id = (int) $id;
         $this->description = $description;
     }
 
     protected function getSuccessMessage(): string
     {
-        return 'Task added successfully (ID: %s)';
+        return 'Task updated successfully (ID: %s)';
     }
 
     public function execute(): string
     {
-        $task = $this->repository->add($this->description);
+        $task = $this->repository->getTaskByID($this->id);
+
+        if (!$task) {
+            throw new NotFoundException("Task (ID: $this->id) not found");
+        }
+
+        $task->description = $this->description;
+
+        $this->repository->update($task);
 
         return sprintf(
             $this->getSuccessMessage(),

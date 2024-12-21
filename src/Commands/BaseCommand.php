@@ -25,10 +25,12 @@ abstract class BaseCommand
 
     private function passOrThrow()
     {
-        $this->setArgumentsOrThrow();
+        $this->parseArgumentsOrThrow();
     }
 
-    protected function setArgumentsOrThrow()
+    protected function parseArgumentsOrThrow()
     {
     }
+
+    abstract protected function getSuccessMessage(): string;
 }

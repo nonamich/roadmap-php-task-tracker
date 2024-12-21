@@ -2,12 +2,13 @@
 
 namespace App;
 
+use App\Enums\TaskStatus;
 use App\Interfaces\RepositoryInterface;
 
 class FileJsonRepository implements RepositoryInterface
 {
-    private const string FILE_NAME = 'database.json';
-    private const string DIR_NAME = 'database';
+    private const FILE_NAME = 'database.json';
+    private const DIR_NAME = 'database';
     public readonly string $filePath;
 
     public function __construct()
@@ -17,7 +18,7 @@ class FileJsonRepository implements RepositoryInterface
         $this->provideFile();
     }
 
-    public function getTaskByID(int $id)
+    public function getTaskByID(int $id): TaskModel|null
     {
         $tasks = $this->getTasks();
 
@@ -35,7 +36,7 @@ class FileJsonRepository implements RepositoryInterface
     private function generateId()
     {
         $ids = array_map(fn($task) => $task->ID, $this->getTasks());
-        $maxId = max($ids);
+        $maxId = $ids ? max($ids) : 0;
 
         return (int) $maxId + 1;
     }
@@ -46,6 +47,7 @@ class FileJsonRepository implements RepositoryInterface
             ID: $this->generateId(),
             description: $description,
             createdAt: time(),
+            updatedAt: time()
         );
         $tasks = $this->getTasks();
         $tasks[] = $newTask;
@@ -68,6 +70,8 @@ class FileJsonRepository implements RepositoryInterface
 
             break;
         }
+
+        $newTask->updatedAt = time();
 
         $this->saveTasks($tasks);
     }
@@ -94,7 +98,10 @@ class FileJsonRepository implements RepositoryInterface
      */
     private function saveTasks(array $tasks)
     {
-        file_put_contents($this->filePath, json_encode($tasks));
+        file_put_contents(
+            $this->filePath,
+            json_encode($tasks, JSON_PRETTY_PRINT)
+        );
     }
 
     /**
@@ -125,7 +132,7 @@ class FileJsonRepository implements RepositoryInterface
     {
         try {
             return $this->getTasksOrThrow();
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
             $this->provideFile();
 
             return $this->getTasks();
@@ -145,7 +152,7 @@ class FileJsonRepository implements RepositoryInterface
             return new TaskModel(
                 ID: $item['ID'],
                 description: $item['description'],
-                status: $item['status'],
+                status: TaskStatus::from($item['status']),
                 createdAt: $item['createdAt'],
                 updatedAt: $item['updatedAt'],
             );

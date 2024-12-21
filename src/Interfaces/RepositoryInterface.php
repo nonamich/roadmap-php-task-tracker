@@ -10,5 +10,6 @@ interface RepositoryInterface
   public function update(TaskModel $task): void;
   public function delete(int $id): void;
   public function list(): array;
+  public function getTaskByID(int $id): TaskModel|null;
 }
 

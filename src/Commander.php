@@ -3,8 +3,7 @@
 namespace App;
 
 
-use App\Commands\BaseCommand;
-use App\Commands\AddCommand;
+use App\Commands\{BaseCommand, AddCommand, UpdateCommand};
 
 class Commander
 {
@@ -14,6 +13,7 @@ class Commander
      */
     private $commands = [
         AddCommand::class,
+        UpdateCommand::class,
     ];
 
     /**
@@ -28,7 +28,7 @@ class Commander
 
             $command = new $CommandClass($arguments);
 
-            $command->execute();
+            echo Logger::success($command->execute());
 
             return;
         }

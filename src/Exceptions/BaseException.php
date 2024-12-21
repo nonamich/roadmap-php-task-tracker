@@ -2,21 +2,17 @@
 
 namespace App\Exceptions;
 
-use App\Utils;
-use App\Enums\LoggerColor;
+use App\Logger;
 
 abstract class BaseException extends \Exception
 {
-    protected LoggerColor $color;
+    public function __construct(string $message)
+    {
+        parent::__construct(message: $message);
+    }
 
     public function getCustomMessage()
     {
-        $message = $this->getMessage();
-        $SCOPE = Utils::paintLog(
-            strtoupper($this->color->name),
-            $this->color
-        );
-
-        return "[$SCOPE]: $message";
+        return Logger::error($this->getMessage());
     }
 }

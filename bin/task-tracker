@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php declare(strict_types=1);
 
-use App\Exception\BaseException;
+use App\Exceptions\BaseException;
 use App\Main;
 
 include 'vendor/autoload.php';
