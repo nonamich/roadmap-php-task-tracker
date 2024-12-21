@@ -24,7 +24,7 @@ class Commander
     /**
      * @param string[] $arguments
      */
-    public function execute(string $commandName, array $arguments)
+    public function execute(?string $commandName, ?array $arguments = [])
     {
         if (empty($commandName)) {
             $commandName = "list";
