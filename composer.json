@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "start": "@php bin/task-tracker"
+        "start": "@php bin/cli"
     },
     "autoload": {
         "psr-4": {

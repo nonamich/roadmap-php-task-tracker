@@ -3,7 +3,9 @@
 namespace App;
 
 use App\Enums\TaskStatus;
+use App\Exceptions\NotFoundException;
 use App\Interfaces\RepositoryInterface;
+use App\Models\Task;
 
 class FileJsonRepository implements RepositoryInterface
 {
@@ -18,7 +20,7 @@ class FileJsonRepository implements RepositoryInterface
         $this->provideFile();
     }
 
-    public function getTaskByID(int $id): TaskModel|null
+    public function getByID(int $id): Task
     {
         $tasks = $this->getTasks();
 
@@ -30,7 +32,7 @@ class FileJsonRepository implements RepositoryInterface
             return $task;
         }
 
-        return null;
+        throw new NotFoundException("Task (ID: $id) not found");
     }
 
     private function generateId()
@@ -41,9 +43,9 @@ class FileJsonRepository implements RepositoryInterface
         return (int) $maxId + 1;
     }
 
-    public function add(string $description): TaskModel
+    public function add(string $description): Task
     {
-        $newTask = new TaskModel(
+        $newTask = new Task(
             ID: $this->generateId(),
             description: $description,
             createdAt: time(),
@@ -57,7 +59,7 @@ class FileJsonRepository implements RepositoryInterface
         return $newTask;
     }
 
-    public function update(TaskModel $newTask): void
+    public function update(Task $newTask): void
     {
         $tasks = $this->getTasks();
 
@@ -85,7 +87,7 @@ class FileJsonRepository implements RepositoryInterface
                 continue;
             }
 
-            unset($tasks[$index]);
+            array_splice($tasks, $index, 1);
 
             break;
         }
@@ -94,7 +96,7 @@ class FileJsonRepository implements RepositoryInterface
     }
 
     /**
-     * @param TaskModel[] $tasks
+     * @param Task[] $tasks
      */
     private function saveTasks(array $tasks)
     {
@@ -105,11 +107,17 @@ class FileJsonRepository implements RepositoryInterface
     }
 
     /**
-     * @return TaskModel[]
+     * @return Task[]
      */
-    public function list(): array
+    public function list(TaskStatus|null $status = null): array
     {
-        return $this->getTasks();
+        $tasks = $this->getTasks();
+
+        if ($status) {
+            return array_filter($tasks, fn($task) => $task->status === $status);
+        }
+
+        return $tasks;
     }
 
     private function isFileExists()
@@ -149,14 +157,14 @@ class FileJsonRepository implements RepositoryInterface
         }
 
         return array_map(function ($item) {
-            return new TaskModel(
+            return new Task(
                 ID: $item['ID'],
                 description: $item['description'],
                 status: TaskStatus::from($item['status']),
                 createdAt: $item['createdAt'],
                 updatedAt: $item['updatedAt'],
             );
-        }, $data);
+        }, array_values($data));
     }
 
     private function isFileExistsAndValid()

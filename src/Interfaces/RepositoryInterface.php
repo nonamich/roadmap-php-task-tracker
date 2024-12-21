@@ -2,14 +2,15 @@
 
 namespace App\Interfaces;
 
-use App\TaskModel;
+use App\Enums\TaskStatus;
+use App\Models\Task;
 
 interface RepositoryInterface
 {
-  public function add(string $description): TaskModel;
-  public function update(TaskModel $task): void;
+  public function add(string $description): Task;
+  public function update(Task $task): void;
   public function delete(int $id): void;
-  public function list(): array;
-  public function getTaskByID(int $id): TaskModel|null;
+  public function list(TaskStatus|null $status = null): array;
+  public function getByID(int $id): Task;
 }
 

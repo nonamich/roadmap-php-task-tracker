@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App;
+namespace App\Models;
 
 use App\Enums\TaskStatus;
 
-class TaskModel
+class Task
 {
     public function __construct(
         public readonly int $ID,

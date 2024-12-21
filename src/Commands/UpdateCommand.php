@@ -11,17 +11,17 @@ class UpdateCommand extends BaseCommand
     protected int $id;
     protected string $description;
 
-    static public function getCommandName(): string
+    static public function matchCommand($commandName): bool
     {
-        return 'update';
+        return $commandName === 'update';
     }
 
-    protected function parseArgumentsOrThrow()
+    protected function passOrThrow()
     {
         @[$id, $description] = $this->arguments;
 
         if (empty($id) || !is_numeric($id)) {
-            throw new ValidateException('id must be not empty');
+            throw new ValidateException('id must be valid');
         }
 
         if (empty($description)) {
@@ -37,13 +37,9 @@ class UpdateCommand extends BaseCommand
         return 'Task updated successfully (ID: %s)';
     }
 
-    public function execute(): string
+    protected function run(): string
     {
-        $task = $this->repository->getTaskByID($this->id);
-
-        if (!$task) {
-            throw new NotFoundException("Task (ID: $this->id) not found");
-        }
+        $task = $this->repository->getByID($this->id);
 
         $task->description = $this->description;
 

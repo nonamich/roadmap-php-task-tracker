@@ -3,36 +3,39 @@
 namespace App\Commands;
 
 use App\Commands\BaseCommand;
+use App\Exceptions\NotFoundException;
 use App\Exceptions\ValidateException;
 
-class AddCommand extends BaseCommand
+class DeleteCommand extends BaseCommand
 {
-    protected string $description;
+    protected int $id;
 
     static public function matchCommand($commandName): bool
     {
-        return $commandName === 'add';
+        return $commandName === 'delete';
     }
 
     protected function passOrThrow()
     {
-        @[$description] = $this->arguments;
+        @[$id] = $this->arguments;
 
-        if (empty($description)) {
-            throw new ValidateException('Description must be not empty');
+        if (empty($id) || !is_numeric($id)) {
+            throw new ValidateException('id must be valid');
         }
 
-        $this->description = $description;
+        $this->id = (int) $id;
     }
 
     protected function getSuccessMessage(): string
     {
-        return 'Task added successfully (ID: %s)';
+        return 'Task deleted successfully (ID: %s)';
     }
 
     protected function run(): string
     {
-        $task = $this->repository->add($this->description);
+        $task = $this->repository->getByID($this->id);
+
+        $this->repository->delete($task->ID);
 
         return sprintf(
             $this->getSuccessMessage(),

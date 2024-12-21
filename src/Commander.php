@@ -2,33 +2,37 @@
 
 namespace App;
 
-
-use App\Commands\{BaseCommand, AddCommand, UpdateCommand};
+use App\Commands\BaseCommand;
 
 class Commander
 {
 
     /**
-     * @var array<BaseCommand>
+     * @var class-string<BaseCommand>[]
      */
-    private $commands = [
-        AddCommand::class,
-        UpdateCommand::class,
-    ];
+    private $Commands = [];
+
+    /**
+     * @param class-string<BaseCommand> $Command
+     */
+    public function addCommand(string $Command)
+    {
+        $this->Commands[] = $Command;
+    }
 
     /**
      * @param string[] $arguments
      */
     public function execute(string $commandName, array $arguments)
     {
-        foreach ($this->commands as $CommandClass) {
-            if ($CommandClass::getCommandName() !== $commandName) {
+        foreach ($this->Commands as $Command) {
+            if (!$Command::matchCommand($commandName)) {
                 continue;
             }
 
-            $command = new $CommandClass($arguments);
+            $command = new $Command($commandName, $arguments);
 
-            echo Logger::success($command->execute());
+            $command->execute();
 
             return;
         }

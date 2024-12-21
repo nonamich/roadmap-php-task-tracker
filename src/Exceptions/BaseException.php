@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-use App\Logger;
+use App\Utils\Logger;
 
 abstract class BaseException extends \Exception
 {
