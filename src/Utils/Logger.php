@@ -11,6 +11,11 @@ abstract class Logger
         return self::getMessage($message, LoggerColor::ERROR);
     }
 
+    public static function info(string $message)
+    {
+        return self::getMessage($message, LoggerColor::INFO);
+    }
+
     public static function success(string $message)
     {
         return self::getMessage($message, LoggerColor::SUCCESS);
@@ -23,7 +28,7 @@ abstract class Logger
         return "[$SCOPE]: $message";
     }
 
-    private static function withColor(string $text, LoggerColor $scope)
+    public static function withColor(string $text, LoggerColor $scope)
     {
         return "\033[" . $scope->value . "m" . $text . "\033[0m";
     }

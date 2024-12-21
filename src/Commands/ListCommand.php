@@ -36,7 +36,7 @@ class ListCommand extends BaseCommand
 
     protected function output(string $message)
     {
-        echo $message;
+        echo $message . PHP_EOL;
     }
 
     /**
@@ -65,7 +65,11 @@ class ListCommand extends BaseCommand
         $tasks = $this->repository->list($this->status);
 
         if (!$tasks) {
-            throw new NotFoundException("no found any tasks with status {$this->status->value}");
+            if ($this->status) {
+                throw new NotFoundException("No tasks found with status '{$this->status->value}'");
+            } else {
+                throw new NotFoundException("No tasks found");
+            }
         }
 
         /**

@@ -2,8 +2,13 @@
 
 namespace App\Exceptions;
 
-use App\Enums\LoggerColor;
+use App\Utils\Logger;
 
 class NotFoundException extends BaseException
 {
+
+    public function getCustomMessage()
+    {
+        return Logger::info($this->getMessage());
+    }
 }

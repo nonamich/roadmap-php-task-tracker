@@ -16,14 +16,10 @@ function bootstrap()
     $arguments = array_slice($argv, 1);
     @[$commandName] = array_splice($arguments, 0, 1);
 
-    if (empty($commandName)) {
-      return;
-    }
-
     Main::instance()->commander->execute($commandName, $arguments);
   } catch (BaseException $e) {
-    echo $e->getCustomMessage();
+    echo $e->getCustomMessage() . PHP_EOL;
   } catch (\Exception $e) {
-    echo $e->getMessage();
+    echo $e->getMessage() . PHP_EOL;
   }
 }

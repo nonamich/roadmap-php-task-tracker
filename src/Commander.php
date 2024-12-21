@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Commands\BaseCommand;
+use App\Exceptions\NotFoundException;
 
 class Commander
 {
@@ -25,6 +26,10 @@ class Commander
      */
     public function execute(string $commandName, array $arguments)
     {
+        if (empty($commandName)) {
+            $commandName = "list";
+        }
+
         foreach ($this->Commands as $Command) {
             if (!$Command::matchCommand($commandName)) {
                 continue;
@@ -37,6 +42,6 @@ class Commander
             return;
         }
 
-        throw new \DomainException("Unknown $commandName command");
+        throw new NotFoundException("Unknown $commandName command");
     }
 }

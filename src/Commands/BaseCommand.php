@@ -32,7 +32,7 @@ abstract class BaseCommand
 
     protected function output(string $message)
     {
-        echo Logger::success($message);
+        echo Logger::success($message) . PHP_EOL;
     }
 
     final public function execute()

@@ -2,6 +2,8 @@
 
 namespace App\Utils;
 
+use App\Enums\LoggerColor;
+
 abstract class Tabler
 {
     /**
@@ -34,6 +36,13 @@ abstract class Tabler
                 $columnLength = $columnsLength[$columnIndex];
 
                 $columns[] = str_pad($column, $columnLength);
+            }
+
+            if ($rowIndex === 0) {
+                $columns = array_map(
+                    fn($column) => Logger::withColor($column, LoggerColor::INFO),
+                    $columns
+                );
             }
 
             $rows[] = implode(" | ", $columns);

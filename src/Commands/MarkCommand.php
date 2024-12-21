@@ -4,8 +4,7 @@ namespace App\Commands;
 
 use App\Commands\BaseCommand;
 use App\Enums\TaskStatus;
-use App\Exceptions\NotFoundException;
-use App\Exceptions\ValidateException;
+use App\Exceptions\{NotFoundException, ValidateException};
 
 class MarkCommand extends BaseCommand
 {
@@ -20,23 +19,22 @@ class MarkCommand extends BaseCommand
             self::getStatusByCommand($commandName);
 
             return true;
-        } catch (ValidateException) {
+        } catch (NotFoundException) {
             return false;
         }
     }
 
     static function getStatusByCommand(string $commandName)
     {
-        $status = TaskStatus::tryFrom(
-            str_replace(
-                self::COMMAND_PREFIX,
-                '',
-                $commandName
-            )
+        $guessStatus = str_replace(
+            self::COMMAND_PREFIX,
+            '',
+            $commandName
         );
+        $status = TaskStatus::tryFrom($guessStatus);
 
         if (!$status) {
-            throw new ValidateException("Status {$status->value} no found");
+            throw new NotFoundException("No status found with '{$guessStatus}'");
         }
 
         return $status;
