@@ -15,9 +15,35 @@ git clone https://github.com/nonamich/roadmap-php-task-tracker.git
 
 ## Build
 
+<details>
+  <summary>Manual</summary>
+
+#### Dependencies
+
 ```bash
 composer install
 ```
+
+#### Executable permission
+
+```bash
+chmod u+x ./bin/cli
+```
+
+</details>
+
+<details>
+  <summary>Docker</summary>
+
+```bash
+docker build -t task-cli .
+```
+
+```bash
+docker run --rm -i -t -it task-cli /bin/sh
+```
+
+</details>
 
 ## Run
 
@@ -36,15 +62,3 @@ composer install
 ./bin/cli list todo
 ./bin/cli list in-progress
 ```
-
-## Docker
-
-```bash
-docker build -t task-cli .
-```
-
-```bash
-docker run --rm -i -t -it task-cli /bin/sh
-```
-
-Enter commands, [see above](#run)
